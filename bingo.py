@@ -18,7 +18,9 @@ def generate_bingo_board(maxNum = 90):
     route = generate_bingo_route(rowsInRoute, cols, maxNum, numsInRoute, values, rows, board, True)
     board.append(route)
 
-  board = fill_remaining_numbers(board, values, numsInRoute, maxNum, rowsInRoute)
+  fill_remaining_numbers(board, values, numsInRoute, maxNum, rowsInRoute)
+
+  print_board(board)
 
 
 global bingo_route_id
@@ -109,14 +111,25 @@ def fill_remaining_numbers(board, values, numsInRoute, maxNum, rowsInRoute):
     else:
       break
 
-  for row in index_matrix: # temp
-    print(row)
-
-  # TODO update board with new values (make return function)
+  index = 0
+  for i in range(len(board)):
+    for j in range(len(board[i][1])):
+      board[i][1][j] = index_matrix[index]
+      index += 1
 
 def print_board(board):
-  for i in range(board):
-    pass # TODO
+  for route in board:
+    width = (len(route[1][0]) * 5)
+    print('Route number', route[0])
+    print('_' * width)
+    
+    for row_index in range(len(route[1])):
+      for value in route[1][row_index]:
+        print(str(value if value else ' ').rjust(2, ' '), sep=' ', end=' | ')
+      if row_index < len(route[1]):
+        print('')
+
+    print('_' * width)
 
 generate_bingo_board()
 
