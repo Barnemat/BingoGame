@@ -1,4 +1,25 @@
+import os
 from random import randrange, choice
+
+def store_board_to_file(board, path):
+  file_names = os.listdir(path)
+  board_number = len(file_names) + 1
+  board_filename = 'bingo_board_' + str(board_number)
+
+  with open(path + board_filename, 'w') as file:
+    file.write(str(board))
+
+def load_boards(path, board_name = None):
+  file_names = os.listdir(path) if not board_name else [board_name]
+
+  boards = []
+
+  for file_name in file_names:
+    with open(path + file_name, 'r') as file:
+      for line in file:
+        boards.append(eval(line))
+  
+  return boards
 
 def generate_bingo_board(maxNum = 90):
   maxNum = maxNum if maxNum % 10 == 0 else 90
@@ -20,7 +41,8 @@ def generate_bingo_board(maxNum = 90):
 
   fill_remaining_numbers(board, values, numsInRoute, maxNum, rowsInRoute)
 
-  print_board(board)
+  path = os.getcwd() + '/bingo_boards/'
+  store_board_to_file(board, path)
 
 
 global bingo_route_id
@@ -120,7 +142,7 @@ def fill_remaining_numbers(board, values, numsInRoute, maxNum, rowsInRoute):
 def print_board(board):
   for route in board:
     width = (len(route[1][0]) * 5)
-    print('Route number', route[0])
+    print('Route id', route[0])
     print('_' * width)
     
     for row_index in range(len(route[1])):
@@ -131,15 +153,20 @@ def print_board(board):
 
     print('_' * width)
 
-generate_bingo_board()
+# generate_bingo_board()
 
-# TODO store board to file function
+def find_route(route_id, path):
+  boards = load_boards(path)
+
+  for board in boards:
+    for route in board:
+      if route_id == route[0]: return route
+
+  return False
+
+# print(find_route(7, os.getcwd() + '/bingo_boards/'))
 
 # TODO main function for generating a number of bingo boards (make sure this purges stored boards or something)
-
-# TODO load board(s) function
-
-# TODO load board with given route function
 
 # TODO check if a route is winner function
 
