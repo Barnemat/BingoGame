@@ -1,5 +1,6 @@
 import os
 from random import choice
+import sys
 
 from store_and_load import load_boards
 from generate_bingo_board import generate_bingo_board
@@ -43,11 +44,18 @@ def check_if_bingo(route, drawn_numbers, bingo_row):
   elif len(route_id) > 0:
     return False
 
-def run_bingo_game(number_of_new_boards, maxNum):
+def run_bingo_game(number_of_new_boards, maxNum = 90):
   global bingo_route_id
   path = os.getcwd() + '/bingo_boards/'
 
-  print('Remember to clean the /bingo_boards folder, if you need all new boards')
+  argv = sys.argv
+  if '-n' in argv:
+    index = argv.index('-n')
+
+    if len(argv) - 1 > index and argv[index + 1].isdigit():
+      number_of_new_boards = int(argv[index + 1])
+
+  input('Remember to clean the /bingo_boards folder, if you need all new boards. Press enter to continue. ')
 
   boards = load_boards(path)
 
@@ -77,7 +85,7 @@ def run_bingo_game(number_of_new_boards, maxNum):
     print('Last drawn number: ', last_number, ' - Round: ', len(drawn_numbers))
 
     bingo = False
-    while input('Bingo? y/N') == 'y':
+    while input('Bingo? y/N ') == 'y':
       route_id = input('Type route id to control bingo route: ')
 
       if route_id.isdigit(): route_id = int(route_id) # separate into function
@@ -99,6 +107,6 @@ def run_bingo_game(number_of_new_boards, maxNum):
       if bingo_row > 3: break
       print('Switching to ', bingo_row, ' rows bingo')
 
-  print('Bingo is done.')  
+  print('Bingo is done.')
 
-run_bingo_game(5, 90) # Functionality for numbers other than 90 does not work at the moment
+run_bingo_game(10) # Functionality for numbers other than 90 does not work at the moment
