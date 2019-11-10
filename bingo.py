@@ -45,7 +45,6 @@ def check_if_bingo(route, drawn_numbers, bingo_row):
     return False
 
 def run_bingo_game(number_of_new_boards, maxNum = 90):
-  global bingo_route_id
   path = os.getcwd() + '/bingo_boards/'
 
   argv = sys.argv
@@ -64,7 +63,7 @@ def run_bingo_game(number_of_new_boards, maxNum = 90):
   bingo_route_id = 0 if len(boards) == 0 else len(boards) * (rows // 3)
 
   for i in range(number_of_new_boards):
-    generate_bingo_board(maxNum)
+    bingo_route_id = generate_bingo_board(maxNum, bingo_route_id)
 
   numbers = set([x for x in range(1, maxNum + 1)])
   drawn_numbers = set()
@@ -76,7 +75,7 @@ def run_bingo_game(number_of_new_boards, maxNum = 90):
     generate = input('\nGenerate new Bingo board? y/N, else draw new number: ')
 
     if generate == 'y' or generate == 'Y':
-      generate_bingo_board(maxNum)
+      bingo_route_id = generate_bingo_board(maxNum, bingo_route_id)
       continue
 
     last_number = draw_number(numbers, drawn_numbers)
