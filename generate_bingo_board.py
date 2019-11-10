@@ -3,7 +3,10 @@ from random import randrange, choice
 
 from store_and_load import store_board_to_file
 
-def generate_bingo_board(maxNum = 90):
+def generate_bingo_board(maxNum, next_id):
+  global bingo_route_id
+  bingo_route_id = next_id if next_id else 0
+
   maxNum = maxNum if maxNum % 10 == 0 else 90
   cols = maxNum // 10
   rows = cols * 2
@@ -18,7 +21,7 @@ def generate_bingo_board(maxNum = 90):
   board = []
 
   for i in range(routes):
-    route = generate_bingo_route(rowsInRoute, cols, maxNum, numsInRoute, values, rows, board, True)
+    route = generate_bingo_route(rowsInRoute, cols, numsInRoute, values)
     board.append(route)
 
   fill_remaining_numbers(board, values, numsInRoute, maxNum, rowsInRoute)
@@ -26,10 +29,9 @@ def generate_bingo_board(maxNum = 90):
   path = os.getcwd() + '/bingo_boards/'
   store_board_to_file(board, path)
 
+  return bingo_route_id # a solution to passing the id over to the main function
 
-global bingo_route_id
-bingo_route_id = 0
-def generate_bingo_route(rowsInRoute, cols, maxNum, numsInRoute, values, maxRows, board, init, route = None, routeNum = 0):
+def generate_bingo_route(rowsInRoute, cols, numsInRoute, values):
   global bingo_route_id
   numsInRow = numsInRoute // rowsInRoute
   usedIndices = set()
