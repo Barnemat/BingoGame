@@ -5,6 +5,9 @@ from fpdf import FPDF
 def generate_PDF_from_board(board_name, in_path, out_path):
   board = load_boards(in_path, board_name)
 
+  if not os.path.isdir(out_path):
+    os.mkdir(out_path)
+
   pdf = FPDF()
   pdf.add_page()
   pdf.set_left_margin(pdf.w / 4)
@@ -44,6 +47,9 @@ def generate_PDF_from_board(board_name, in_path, out_path):
 # generate_PDF_from_board('bingo_board_1', path, out_path)
 
 def store_board_to_file(board, path):
+  if not os.path.isdir(path):
+    os.mkdir(path)
+
   file_names = [x for x in os.listdir(path) if os.path.isfile(path + x)]
   board_number = len(file_names) + 1
   board_filename = 'bingo_board_' + str(board_number)
@@ -55,6 +61,9 @@ def store_board_to_file(board, path):
   generate_PDF_from_board(board_filename, path, out_path)
 
 def load_boards(path, board_name = None):
+  if not os.path.isdir(path):
+    return []
+
   file_names = [x for x in os.listdir(path) if os.path.isfile(path + x)] if not board_name else [board_name]
 
   boards = []
